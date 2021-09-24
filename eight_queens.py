@@ -1,5 +1,6 @@
 from random import random, randint
-import plotly.graph_objects as go
+
+QUEENS_QUANTITY = 8
 
 
 def evaluate(individual):
@@ -13,7 +14,7 @@ def evaluate(individual):
     """
     conflicts = 0
     for i in range(7):
-        for j in range(i + 1, 8):
+        for j in range(i + 1, QUEENS_QUANTITY):
             if individual[i] == individual[j]:
                 conflicts += 1
             elif i - individual[i] == j - individual[j] or i + individual[i] == j + individual[j]:
@@ -64,8 +65,8 @@ def mutate(individual, m):
     :return:list - individuo apos mutacao (ou intacto, caso a prob. de mutacao nao seja satisfeita)
     """
     if random() < m:
-        new_position = int(randint(0, 7))
-        new_value = int(randint(1, 8))
+        new_position = int(randint(0, QUEENS_QUANTITY - 1))
+        new_value = int(randint(1, QUEENS_QUANTITY))
         individual[new_position] = new_value
     return individual
 
@@ -75,7 +76,7 @@ def generate_population(size):
 
 
 def generate_random_individual():
-    return [randint(1, 8) for i in range(8)]
+    return [randint(1, QUEENS_QUANTITY) for i in range(QUEENS_QUANTITY)]
 
 
 def select_individuals(individual_list, selection_size):
@@ -101,7 +102,7 @@ def run_ga(g, n, k, m, e):
     :param e:bool - se vai haver elitismo
     :return:list - melhor individuo encontrado
     """
-    vozes_da_minha_cabeça = 4
+    partitioner = 4
     current_population = generate_population(n)
     conflicts = []
     for individual in current_population:
@@ -119,68 +120,9 @@ def run_ga(g, n, k, m, e):
             second_selection = select_individuals(current_population[:], k)
             parent_2 = tournament(second_selection)
 
-            offspring_1, offspring_2 = crossover(parent_1, parent_2, vozes_da_minha_cabeça)
+            offspring_1, offspring_2 = crossover(parent_1, parent_2, partitioner)
             offspring_1 = mutate(offspring_1, m)
             offspring_2 = mutate(offspring_2, m)
             new_population.extend([offspring_1, offspring_2])
         current_population = new_population
     return tournament(current_population)
-
-
-def run_ga_with_data_generation(g, n, k, m, e):
-    """
-    Executa o algoritmo genético e retorna o indivíduo com o menor número de ataques entre rainhas
-    :param g:int - numero de gerações
-    :param n:int - numero de individuos
-    :param k:int - numero de participantes do torneio
-    :param m:float - probabilidade de mutação (entre 0 e 1, inclusive)
-    :param e:bool - se vai haver elitismo
-    :return:list - melhor individuo encontrado
-    """
-    min_conflicts_per_generation = []
-    max_conflicts_per_generation = []
-    average_conflicts_per_generation = []
-
-    vozes_da_minha_cabeça = 4
-    current_population = generate_population(n)
-
-    for generation in range(g):
-        conflicts = []
-        for individual in current_population:
-            conflicts.append(evaluate(individual))
-        min_conflicts_per_generation.append(min(conflicts))
-        max_conflicts_per_generation.append(max(conflicts))
-        average_conflicts_per_generation.append(sum(conflicts)/len(conflicts))
-
-        new_population = []
-        if e:
-            new_population.append(tournament(current_population))
-        while len(new_population) < n:
-            first_selection = select_individuals(current_population[:], k)
-            parent_1 = tournament(first_selection)
-
-            current_population.pop(current_population.index(parent_1))
-            second_selection = select_individuals(current_population[:], k)
-            parent_2 = tournament(second_selection)
-
-            offspring_1, offspring_2 = crossover(parent_1, parent_2, vozes_da_minha_cabeça)
-            offspring_1 = mutate(offspring_1, m)
-            offspring_2 = mutate(offspring_2, m)
-            new_population.extend([offspring_1, offspring_2])
-        current_population = new_population
-    generate_graph(min_conflicts_per_generation, max_conflicts_per_generation, average_conflicts_per_generation)
-    return tournament(current_population)
-
-
-def generate_graph(min_values, max_values, average_values):
-    y = [i for i in range(len(min_values))]
-
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=y, y=min_values, name="menor conflito", line_shape='linear'))
-    fig.add_trace(go.Scatter(x=y, y=max_values, name="maior conflito", line_shape='linear'))
-    fig.add_trace(go.Scatter(x=y, y=average_values, name="conflito médio", line_shape='linear'))
-
-    fig.update_layout(title='Desempenho do algoritmo genético no problema das 8 rainhas',
-                      xaxis_title='Geração',
-                      yaxis_title='Conflitos')
-    fig.show()
