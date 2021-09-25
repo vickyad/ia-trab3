@@ -8,7 +8,7 @@
 Parâmetros escolhidos
 - `g`: 200
 - `n`: 100
-- `k: 20
+- `k`: 20
 - `m`: 0.6
 - `e`: True
 
