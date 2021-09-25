@@ -8,7 +8,7 @@ class TestEightQueens(unittest.TestCase):
         Teste basico com o exemplo do enunciado
         :return:
         """
-        self.assertEqual(8, eight_queens.evaluate([2,2,4,8,1,6,3,4]))
+        self.assertEqual(8, eight_queens.evaluate([2, 2, 4, 8, 1, 6, 3, 4]))
 
     def test_tournament(self):
         """
@@ -34,8 +34,8 @@ class TestEightQueens(unittest.TestCase):
 
         children = [offspring1, offspring2]
 
-        self.assertIn([2,4,7,5,2,4,1,1], children)
-        self.assertIn([3,2,7,4,8,5,5,2], children)
+        self.assertIn([2, 4, 7, 5, 2, 4, 1, 1], children)
+        self.assertIn([3, 2, 7, 4, 8, 5, 5, 2], children)
 
     def test_mutate_prob_zero(self):
         """
