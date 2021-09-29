@@ -14,7 +14,7 @@ def compute_mse(theta_0, theta_1, data):
     f_somatory = 0
     for i in range(data_len):
         f_somatory += (h_theta(data[i][0], theta_0, theta_1) - data[i][1]) ** 2
-    return 1/data_len * f_somatory
+    return 1 / data_len * f_somatory
 
 
 def step_gradient(theta_0, theta_1, data, alpha):
@@ -32,8 +32,8 @@ def step_gradient(theta_0, theta_1, data, alpha):
     for i in range(data_len):
         theta_0_sum += h_theta(data[i][0], theta_0, theta_1) - data[i][1]
         theta_1_sum += (h_theta(data[i][0], theta_0, theta_1) - data[i][1]) * data[i][0]
-    theta_0 = theta_0 - alpha * (2/data_len * theta_0_sum)
-    theta_1 = theta_1 - alpha * (2/data_len * theta_1_sum)
+    theta_0 = theta_0 - alpha * (2 / data_len * theta_0_sum)
+    theta_1 = theta_1 - alpha * (2 / data_len * theta_1_sum)
     return theta_0, theta_1
 
 
