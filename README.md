@@ -14,8 +14,8 @@ Parâmetros escolhidos
 
 ## Regressão linear
 Parâmetros escolhidos
-- `theta_0`:
-- `theta_1`:
-- `alpha`:
-- `num_interations`: 
-> Melhor erro quadrático: 
+- `theta_0`: 0.005
+- `theta_1`: 0.005
+- `alpha`: 0.01
+- `num_interations`: 8000
+> Melhor erro quadrático: 8.953942751950358
